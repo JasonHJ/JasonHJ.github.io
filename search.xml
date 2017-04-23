@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[我的第一个博客]]></title>
+      <url>/2017/04/23/hello/</url>
+      <content type="html"></content>
+      
+        
+        <tags>
+            
+            <tag> hello </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+    
+    <entry>
+      <title><![CDATA[about me]]></title>
+      <url>/about/index.html</url>
+      <content type="html"><![CDATA[<p>感悟人生跟我说如果</p>
+]]></content>
+    </entry>
+    
+  
+</search>
