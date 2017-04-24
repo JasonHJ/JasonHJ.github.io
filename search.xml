@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
+<search>
   
     
     <entry>
       <title><![CDATA[我的博客]]></title>
-      <url>/2017/04/23/hello/</url>
-      <content type="html"></content>
-      
-        
-        <tags>
-            
-            <tag> 全新的主题---NEXT </tag>
-            
-        </tags>
-        
+      <url>%2F2017%2F04%2F23%2Fhello%2F</url>
+      <content type="text"></content>
     </entry>
+
     
   
   
