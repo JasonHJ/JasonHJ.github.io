@@ -92,16 +92,17 @@
 
 
 
-<meta name="description" content="为天地立心，为生民立命，为往圣继绝学，为万世开太平">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="https://jasonhj.github.io/categories/index.html">
+<meta name="description" content="导语：  本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。  关于this  this既不指向函数自身也不止像函数的词法作用域； this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析this的四种绑定规则">
+<meta property="og:url" content="https://jasonhj.github.io/2017/04/25/解析this的四种绑定规则/index.html">
 <meta property="og:site_name" content="JasonH's Blog">
-<meta property="og:description" content="为天地立心，为生民立命，为往圣继绝学，为万世开太平">
-<meta property="og:updated_time" content="2017-04-24T15:15:20.372Z">
+<meta property="og:description" content="导语：  本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。  关于this  this既不指向函数自身也不止像函数的词法作用域； this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。">
+<meta property="og:updated_time" content="2017-04-25T14:14:03.562Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-<meta name="twitter:description" content="为天地立心，为生民立命，为往圣继绝学，为万世开太平">
+<meta name="twitter:title" content="解析this的四种绑定规则">
+<meta name="twitter:description" content="导语：  本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。  关于this  this既不指向函数自身也不止像函数的词法作用域； this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。">
 
 
 
@@ -129,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="https://jasonhj.github.io/categories/"/>
+  <link rel="canonical" href="https://jasonhj.github.io/2017/04/25/解析this的四种绑定规则/"/>
 
 
 
 
 
-  <title>categories | JasonH's Blog</title>
+  <title>解析this的四种绑定规则 | JasonH's Blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -160,7 +161,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -289,25 +290,279 @@
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h1 class="post-title" itemprop="name headline">categories</h1>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jasonhj.github.io/2017/04/25/解析this的四种绑定规则/">
 
-</header>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jason He">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/img.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JasonH's Blog">
+    </span>
 
     
-    
-      <div class="category-all-page">
-        <div class="category-all-title">
-            暂无分类
-        </div>
-        <div class="category-all">
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                解析this的四种绑定规则
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T21:50:36+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/25/解析this的四种绑定规则/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/04/25/解析this的四种绑定规则/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/04/25/解析this的四种绑定规则/" class="leancloud_visitors" data-flag-title="解析this的四种绑定规则">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"> 本文总阅读量</i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
         </div>
-      </div>
+      </header>
     
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>导语：</p>
+<blockquote>
+<p>本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。</p>
+</blockquote>
+<p>关于this</p>
+<ul>
+<li>this既不指向函数自身也不止像函数的词法作用域；</li>
+<li>this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。</li>
+<li>this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。</li>
+</ul>
+<a id="more"></a>
+<p>##this的四种绑定规则</p>
+<p>1.默认绑定</p>
+<p><pre><code><br>function foo(){<br>  console.log(this.a);<br>}<br>var a=2;<br>foo(); // 输出2，原因：foo在全局作用域里被调用，所以this绑定的是全局作用域。<br></code></pre></p>
+<p><pre><code><br>function foo(){<br>  “use strict”<br>   console.log(this.a);<br>}<br>var a=2;<br>foo();// TypeError:this is undefined<br></code></pre><br>若使用严格模式，则不能将全局对象用于默认绑定，因此this会绑定到undefined。</p>
+<p><pre><code><br>function foo(){<br>    console.log(this.a);<br>}<br>var a=2;<br>(function(){<br>   “use strict”<br>   foo();//输出2<br>})();<br>在严格模式下调用foo()则不影响默认绑定。<br></code></pre></p>
+<p>2.隐式绑定<br>考虑：调用位置是否有上下文对象，或者是否被某个对象拥有或包含。<br>    1–&gt;function foo(){<br>            console.log(this.a);<br>        }<br>        var obj={<br>            a:2,<br>            foo:foo<br>        }<br>        obj.foo();// 输出2 原因:foo()再被调用的时候，前面加上了对obj的引用，当函数引用有上下文对象时，函数中的this会绑定上去。<br>        var obj1={<br>            a:42;<br>            obj:obj<br>        }<br>        obj1.obj.foo();//输出2 原因：对象属性引用链中只有上一层或者说最后一层在调用位置中起作用。</p>
+<pre><code>2--&gt;隐式丢失
+    function foo(){
+        console.log(this.a);
+    }
+    var obj={
+        a:2,
+        foo:foo
+    }
+    var bar=obj.foo;
+    var a=&quot;oops,global&quot;;
+    bar(); //输出oops,global
+    原因：虽然bar是obj.foo的一个引用，但实际它引用的是foo函数本身，因此bar()其实是一个不带任何修饰的函数调用，因此应用了默认绑定。
+
+    回调函数丢失this绑定
+    function foo(){
+        console.log(this.a);
+    }
+    function doFoo(fn){
+        //fn其实引用的是foo
+        fn();
+    }
+    var obj={
+        a:2,
+        foo:foo
+    };
+    var a=&quot;oops,global&quot;;
+    doFoo(obj.foo);  //输出&quot;oops,global&quot; 相当于fn=obj.foo;fn();
+    参数传递其实就是一种隐式赋值，因此我们传入函数时也会被隐式赋值。
+
+    作为参数传入内置函数，也会发生隐式丢失
+    function foo(){
+        console.log(this.a);
+    }
+    var obj={
+        a:2,
+        foo:foo
+    };
+    var a=&quot;oops,global&quot;;
+    setTimeout(obj.foo,100);////输出&quot;oops,global&quot;
+</code></pre><p>3.显示绑定<br>使用call(..)和apply(..)，他们的第一个参数是一个对象，在调用函数时将其绑定到this。<br>    1–&gt;function foo(){<br>            console.log(this.a);<br>        }<br>        var obj={<br>            a:2<br>        }<br>        foo.call(obj);//输出2<br>        如果你传入一个原始值(字符串类型、布尔类型)来当做this的绑定对象，这个原始值会被转换成他的对象形式。称为“装箱”。<br>        问题：显示绑定无法解决我们之前的丢失绑定问题？但显示绑定的变种——硬绑定可以解决。</p>
+<pre><code>2--&gt;硬绑定
+    function foo(){
+        console.log(this.a);
+    }
+    var obj={
+        a:2
+    };
+    var bar=function(){
+        foo.call(obj);
+    }
+    bar();//输出2
+    setTimeout(bar,100);//输出2
+    //硬绑定的bar不可能再修改它的this
+    bar.call(window);//输出2
+    硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值；
+
+3--&gt;bind
+    由于硬绑定是一种非常常用的模式，所以ES5提供了内置的方法Function.prototype.bind:
+    function foo(something){
+        console.log(this.a,something);
+        return this.a+something;
+    }
+    var obj={
+        a:2
+    };
+    var b=bar(3);
+    console.log(b);
+</code></pre><p>4.new绑定<br>        function foo(a){<br>            this.a=a;<br>        }<br>        var bar=new foo(2);<br>        console.log(bar.a);//输出2<br>        使用new来调用foo(…)时，我们会构造一个新对象并把它绑定到foo(…)调用中的this上。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/path/to/wechat-reward-image" alt="Jason He WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/path/to/alipay-reward-image" alt="Jason He Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/25/node-js深入浅出/" rel="prev" title="node.js深入浅出">
+                node.js深入浅出 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -316,6 +571,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -583,6 +849,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
@@ -600,6 +870,18 @@
       <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://jasonhj.github.io/2017/04/25/解析this的四种绑定规则/';
+          this.page.identifier = '2017/04/25/解析this的四种绑定规则/';
+          this.page.title = '解析this的四种绑定规则';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
