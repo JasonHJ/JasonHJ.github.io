@@ -1,27 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
+<search> 
   
     
     <entry>
       <title><![CDATA[解析this的四种绑定规则]]></title>
-      <url>%2F2017%2F04%2F25%2F%E8%A7%A3%E6%9E%90this%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%91%E5%AE%9A%E8%A7%84%E5%88%99%2F</url>
-      <content type="text"><![CDATA[导语： 本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。 关于this this既不指向函数自身也不止像函数的词法作用域； this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。 ##this的四种绑定规则 1.默认绑定 function foo(){ console.log(this.a);}var a=2;foo(); // 输出2，原因：foo在全局作用域里被调用，所以this绑定的是全局作用域。 function foo(){ “use strict” console.log(this.a);}var a=2;foo();// TypeError:this is undefined若使用严格模式，则不能将全局对象用于默认绑定，因此this会绑定到undefined。 function foo(){ console.log(this.a);}var a=2;(function(){ “use strict” foo();//输出2})();在严格模式下调用foo()则不影响默认绑定。 2.隐式绑定考虑：调用位置是否有上下文对象，或者是否被某个对象拥有或包含。 1–&gt;function foo(){ console.log(this.a); } var obj={ a:2, foo:foo } obj.foo();// 输出2 原因:foo()再被调用的时候，前面加上了对obj的引用，当函数引用有上下文对象时，函数中的this会绑定上去。 var obj1={ a:42; obj:obj } obj1.obj.foo();//输出2 原因：对象属性引用链中只有上一层或者说最后一层在调用位置中起作用。 2--&gt;隐式丢失 function foo(){ console.log(this.a); } var obj={ a:2, foo:foo } var bar=obj.foo; var a=&quot;oops,global&quot;; bar(); //输出oops,global 原因：虽然bar是obj.foo的一个引用，但实际它引用的是foo函数本身，因此bar()其实是一个不带任何修饰的函数调用，因此应用了默认绑定。 回调函数丢失this绑定 function foo(){ console.log(this.a); } function doFoo(fn){ //fn其实引用的是foo fn(); } var obj={ a:2, foo:foo }; var a=&quot;oops,global&quot;; doFoo(obj.foo); //输出&quot;oops,global&quot; 相当于fn=obj.foo;fn(); 参数传递其实就是一种隐式赋值，因此我们传入函数时也会被隐式赋值。 作为参数传入内置函数，也会发生隐式丢失 function foo(){ console.log(this.a); } var obj={ a:2, foo:foo }; var a=&quot;oops,global&quot;; setTimeout(obj.foo,100);////输出&quot;oops,global&quot; 3.显示绑定使用call(..)和apply(..)，他们的第一个参数是一个对象，在调用函数时将其绑定到this。 1–&gt;function foo(){ console.log(this.a); } var obj={ a:2 } foo.call(obj);//输出2 如果你传入一个原始值(字符串类型、布尔类型)来当做this的绑定对象，这个原始值会被转换成他的对象形式。称为“装箱”。 问题：显示绑定无法解决我们之前的丢失绑定问题？但显示绑定的变种——硬绑定可以解决。 2--&gt;硬绑定 function foo(){ console.log(this.a); } var obj={ a:2 }; var bar=function(){ foo.call(obj); } bar();//输出2 setTimeout(bar,100);//输出2 //硬绑定的bar不可能再修改它的this bar.call(window);//输出2 硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值； 3--&gt;bind 由于硬绑定是一种非常常用的模式，所以ES5提供了内置的方法Function.prototype.bind: function foo(something){ console.log(this.a,something); return this.a+something; } var obj={ a:2 }; var b=bar(3); console.log(b); 4.new绑定 function foo(a){ this.a=a; } var bar=new foo(2); console.log(bar.a);//输出2 使用new来调用foo(…)时，我们会构造一个新对象并把它绑定到foo(…)调用中的this上。]]></content>
-    </entry>
+      <url>/2017/04/25/%E8%A7%A3%E6%9E%90this%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%91%E5%AE%9A%E8%A7%84%E5%88%99/</url>
+      <content type="html"><![CDATA[<p>导语：</p>
+<blockquote>
+<p>本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。</p>
+</blockquote>
+<ul>
+<li>this既不指向函数自身也不止像函数的词法作用域；</li>
+<li>this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。</li>
+<li>this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。</li>
+</ul>
+<a id="more"></a>
+<h3 id="this的四种绑定规则"><a href="#this的四种绑定规则" class="headerlink" title="this的四种绑定规则"></a>this的四种绑定规则</h3><h4 id="1-默认绑定"><a href="#1-默认绑定" class="headerlink" title="1.默认绑定"></a><strong>1.默认绑定</strong></h4><pre><code>function foo(){
+  console.log(this.a);
+}
+var a=2;
+foo();  // 输出2，原因：foo在全局作用域里被调用，所以this绑定的是全局作用域。
 
+function foo(){
+  &quot;use strict&quot;
+   console.log(this.a);
+}
+var a=2;
+foo();  // TypeError:this is undefined.
+</code></pre><p>若使用严格模式，则不能将全局对象用于默认绑定，因此this会绑定到undefined。</p>
+<pre><code>function foo(){
+  console.log(this.a);
+}
+var a=2;
+(function(){
+   &quot;use strict&quot;
+   foo();  //输出2。
+})();
+</code></pre><p>在严格模式下调用foo()则不影响默认绑定。</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var a=2;
+(function(){
+    &quot;use strict&quot;;
+    foo();  //输出2。
+})();
+</code></pre><h4 id="2-隐式绑定"><a href="#2-隐式绑定" class="headerlink" title="2.隐式绑定"></a><strong>2.隐式绑定</strong></h4><p>考虑：调用位置是否有上下文对象，或者是否被某个对象拥有或包含。</p>
+<p>1–&gt;隐式绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+}
+obj.foo();  // 输出2 原因:foo()再被调用的时候，前面加上了对obj的引用，当函数引用有上下文对象时，函数中的this会绑定上去。
+var obj1={
+    a:42;
+    obj:obj
+}
+obj1.obj.foo();  //输出2 原因：对象属性引用链中只有上一层或者说最后一层在调用位置中起作用。
+</code></pre><p>2–&gt;隐式丢失</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+}
+var bar=obj.foo;
+var a=&quot;oops,global&quot;;
+bar(); //输出oops,global
+原因：虽然bar是obj.foo的一个引用，但实际它引用的是foo函数本身，因此bar()其实是一个不带任何修饰的函数调用，因此应用了默认绑定。
+</code></pre><p>3–&gt;回调函数丢失this绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+function doFoo(fn){
+    //fn其实引用的是foo
+    fn();
+}
+var obj={
+    a:2,
+    foo:foo
+};
+var a=&quot;oops,global&quot;;
+doFoo(obj.foo);  //输出&quot;oops,global&quot; 相当于fn=obj.foo;fn();
+参数传递其实就是一种隐式赋值，因此我们传入函数时也会被隐式赋值。
+
+作为参数传入内置函数，也会发生隐式丢失
+function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+};
+var a=&quot;oops,global&quot;;
+setTimeout(obj.foo,100);////输出&quot;oops,global&quot;
+</code></pre><h4 id="3-显示绑定"><a href="#3-显示绑定" class="headerlink" title="3.显示绑定"></a><strong>3.显示绑定</strong></h4><p>使用call(..)和apply(..)，他们的第一个参数是一个对象，在调用函数时将其绑定到this。</p>
+<p>1–&gt;显示绑定</p>
+<pre><code>function foo(){
+        console.log(this.a);
+    }
+    var obj={
+        a:2
+    }
+    foo.call(obj); //输出2
+</code></pre><p>如果你传入一个原始值(字符串类型、布尔类型)来当做this的绑定对象，这个原始值会被转换成他的对象形式。称为“装箱”。</p>
+<p>问题：显示绑定无法解决我们之前的丢失绑定问题？但显示绑定的变种——硬绑定可以解决。</p>
+<p>2–&gt;硬绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2
+};
+var bar=function(){
+    foo.call(obj);
+}
+bar();//输出2
+setTimeout(bar,100);//输出2
+//硬绑定的bar不可能再修改它的this
+bar.call(window);//输出2
+</code></pre><p>硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值；</p>
+<p>3–&gt;bind</p>
+<p>由于硬绑定是一种非常常用的模式，所以ES5提供了内置的方法：</p>
+<pre><code>Function.prototype.bind:
+function foo(something){
+    console.log(this.a,something);
+    return this.a+something;
+}
+var obj={
+    a:2
+};
+var b=bar(3);
+console.log(b);
+</code></pre><h4 id="4-new绑定"><a href="#4-new绑定" class="headerlink" title="4.new绑定"></a><strong>4.new绑定</strong></h4><pre><code>function foo(a){
+    this.a=a;
+}
+var bar=new foo(2);
+console.log(bar.a);//输出2
+</code></pre><p>使用new来调用foo(…)时，我们会构造一个新对象并把它绑定到foo(…)调用中的this上。</p>
+]]></content>
+      
+        
+    </entry>
     
     <entry>
       <title><![CDATA[node.js深入浅出]]></title>
-      <url>%2F2017%2F04%2F25%2Fnode-js%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%2F</url>
-      <content type="text"><![CDATA[导语： 从本篇文章开始，将对《node.js深入浅出》这本书进行学习，并总结出每一章的知识点概要，如果有时间也会整理出一份详细的思维导图出来，有兴趣的朋友可以一起学习讨论。]]></content>
+      <url>/2017/04/25/node-js%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/</url>
+      <content type="html"><![CDATA[<p>导语：</p>
+<blockquote>
+<p>从本篇文章开始，将对《node.js深入浅出》这本书进行学习，并总结出每一章的知识点概要，如果有时间也会整理出一份详细的思维导图出来，有兴趣的朋友可以一起学习讨论。</p>
+</blockquote>
+<a id="more"></a>]]></content>
+      
+        
     </entry>
-
     
     <entry>
       <title><![CDATA[我的博客]]></title>
-      <url>%2F2017%2F04%2F23%2Fhello%2F</url>
-      <content type="text"></content>
+      <url>/2017/04/23/hello/</url>
+      <content type="html"></content>
+      
+        
+        <tags>
+            
+            <tag> 全新的主题---NEXT </tag>
+            
+        </tags>
+        
     </entry>
-
     
   
   
