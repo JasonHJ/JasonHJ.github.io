@@ -1,27 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
+<search> 
   
     
     <entry>
+      <title><![CDATA[CommonJS与ES6模块规范]]></title>
+      <url>/2017/03/28/CommonJS%E4%B8%8EES6%E6%A8%A1%E5%9D%97%E8%A7%84%E8%8C%83/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>在ES6之前，模块规范最主要的有CommonJS和AMD两种。前者用于服务器，后者用于浏览器。ES6在语言规格的层面上，实现了模块功能，而且实现得相当简单，完全可以取代现有的CommonJS和AMD规范，成为浏览器和服务器通用的模块解决方案。ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。             –《ES6标准入门》</p>
+</blockquote>
+<p>以上大体说明了ES6的模块规范和其他主流的规范剑的区别，接下来结合这几天的学习，总结下CommonJS和ES6这两种规范，以及它们的差异和优缺点，纯属个人学习总结，不喜勿喷哦！</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="CommonJS模块规范"><a href="#CommonJS模块规范" class="headerlink" title="CommonJS模块规范"></a>CommonJS模块规范</h2><h4 id="一个文件就是一个模块，每个模块内部都有一些默认定义好的变量和方法。"><a href="#一个文件就是一个模块，每个模块内部都有一些默认定义好的变量和方法。" class="headerlink" title="一个文件就是一个模块，每个模块内部都有一些默认定义好的变量和方法。"></a>一个文件就是一个模块，每个模块内部都有一些默认定义好的变量和方法。</h4><p><strong>CommonJS模块的特点如下</strong>：</p>
+<blockquote>
+<ol>
+<li><p><strong>所有代码都运行在模块作用域，不会污染全局作用域。</strong></p>
+</li>
+<li><p><strong>模块可以多次加载，但是只会在第一次加载时运行一次，然后运行结果就被缓存了，以后再加载，就直接读取缓存结果。要想让模块再次运行，必须清除缓存。</strong></p>
+</li>
+<li><p><strong>模块加载的顺序，按照其在代码中出现的顺序。</strong></p>
+</li>
+</ol>
+</blockquote>
+<h3 id="1-module对象"><a href="#1-module对象" class="headerlink" title="1.module对象"></a>1.module对象</h3><h4 id="module变量代表当前模块，是一个对象。它有以下属性："><a href="#module变量代表当前模块，是一个对象。它有以下属性：" class="headerlink" title="module变量代表当前模块，是一个对象。它有以下属性："></a>module变量代表当前模块，是一个对象。它有以下属性：</h4><ul>
+<li>module.id 模块的识别符，通常是带有绝对路径的模块文件名。</li>
+<li>module.filename 模块的文件名，带有绝对路径。</li>
+<li>module.loaded 返回一个布尔值，表示模块是否已经完成加载。</li>
+<li>module.parent 返回一个对象，表示调用该模块的模块。<ul>
+<li>在命令行下调用某个模块，比如node something.js，那么module.parent就是undefined，</li>
+<li>在脚本之中调用，比如require(‘./something.js’)，那么module.parent就是调用它的模块。</li>
+<li>利用这一点，可以判断当前模块是否为入口脚本。</li>
+</ul>
+</li>
+<li>module.children 返回一个数组，表示该模块要用到的其他模块。</li>
+<li>module.exports 表示模块对外输出的值，加载某个模块，其实是加载该属性。</li>
+</ul>
+<h4 id="下面是一个示例文件，最后一行输出module变量"><a href="#下面是一个示例文件，最后一行输出module变量" class="headerlink" title="下面是一个示例文件，最后一行输出module变量"></a>下面是一个示例文件，最后一行输出module变量</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// example.js</span></div><div class="line"><span class="keyword">var</span> jquery = <span class="built_in">require</span>(<span class="string">'jquery'</span>);</div><div class="line">exports.$ = jquery;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">module</span>);</div></pre></td></tr></table></figure>
+<h5 id="执行这个文件，命令行会输出如下信息："><a href="#执行这个文件，命令行会输出如下信息：" class="headerlink" title="执行这个文件，命令行会输出如下信息："></a>执行这个文件，命令行会输出如下信息：</h5><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="attribute">id</span>: <span class="string">'.'</span>,</div><div class="line">  <span class="attribute">exports</span>: &#123; <span class="string">'$'</span>: [Function] &#125;,</div><div class="line">  <span class="attribute">parent</span>: null,</div><div class="line">  <span class="attribute">filename</span>: <span class="string">'/path/to/example.js'</span>,</div><div class="line">  <span class="attribute">loaded</span>: false,</div><div class="line">  <span class="attribute">children</span>:</div><div class="line">   [ &#123; <span class="attribute">id</span>: <span class="string">'/path/to/node_modules/jquery/dist/jquery.js'</span>,</div><div class="line">       <span class="attribute">exports</span>: [Function],</div><div class="line">       <span class="attribute">parent</span>: [Circular],</div><div class="line">       <span class="attribute">filename</span>: <span class="string">'/path/to/node_modules/jquery/dist/jquery.js'</span>,</div><div class="line">       <span class="attribute">loaded</span>: true,</div><div class="line">       <span class="attribute">children</span>: [],</div><div class="line">       <span class="attribute">paths</span>: [Object] &#125; ],</div><div class="line">  <span class="attribute">paths</span>:</div><div class="line">   [ <span class="string">'/home/user/deleted/node_modules'</span>,</div><div class="line">     <span class="string">'/home/user/node_modules'</span>,</div><div class="line">     <span class="string">'/home/node_modules'</span>,</div><div class="line">     <span class="string">'/node_modules'</span> ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-require命令"><a href="#2-require命令" class="headerlink" title="2.require命令"></a>2.require命令</h3><h4 id="2-1-require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的exports对象。如果没有发现指定模块，会报错"><a href="#2-1-require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的exports对象。如果没有发现指定模块，会报错" class="headerlink" title="2.1.require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的exports对象。如果没有发现指定模块，会报错"></a>2.1.require命令的基本功能是，读入并执行一个JavaScript文件，然后返回该模块的exports对象。如果没有发现指定模块，会报错</h4><h4 id="2-2-require命令调用自身，等于是执行module-exports"><a href="#2-2-require命令调用自身，等于是执行module-exports" class="headerlink" title="2.2.require命令调用自身，等于是执行module.exports"></a>2.2.require命令调用自身，等于是执行module.exports</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">"hello world"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">require</span>(<span class="string">'./example2.js'</span>)() <span class="comment">//输出 hello world。</span></div></pre></td></tr></table></figure>
+<h4 id="2-3-加载规则"><a href="#2-3-加载规则" class="headerlink" title="2.3 加载规则"></a>2.3 加载规则</h4><ol>
+<li>如果参数字符串以“/”开头，则表示加载的是一个位于绝对路径的模块文件。比如，require(‘/home/marco/foo.js’)将加载/home/marco/foo.js。</li>
+<li>如果参数字符串以“./”开头，则表示加载的是一个位于相对路径（跟当前执行脚本的位置相比）的模块文件。比如，require(‘./circle’)将加载当前脚本同一目录的circle.js。</li>
+<li>如果参数字符串不以“./“或”/“开头，则表示加载的是一个默认提供的核心模块（位于Node的系统安装目录中），或者一个位于各级node_modules目录的已安装模块（全局安装或局部安装）。</li>
+<li>如果参数字符串不以“./“或”/“开头，而且是一个路径，比如require(‘example-module/path/to/file’)，则将先找到example-module的位置，然后再以它为参数，找到后续路径。</li>
+<li>如果指定的模块文件没有发现，Node会尝试为文件名添加.js、.json、.node后，再去搜索。.js件会以文本格式的JavaScript脚本文件解析，.json文件会以JSON格式的文本文件解析，.node文件会以编译后的二进制文件解析。</li>
+<li>如果想得到require命令加载的确切文件名，使用require.resolve()方法。</li>
+</ol>
+<h5 id="举例来说，脚本-home-user-projects-foo-js执行了require-‘bar-js’-命令，Node会依次搜索以下文件"><a href="#举例来说，脚本-home-user-projects-foo-js执行了require-‘bar-js’-命令，Node会依次搜索以下文件" class="headerlink" title="举例来说，脚本/home/user/projects/foo.js执行了require(‘bar.js’)命令，Node会依次搜索以下文件."></a>举例来说，脚本/home/user/projects/foo.js执行了require(‘bar.js’)命令，Node会依次搜索以下文件.</h5><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/usr/local/<span class="class"><span class="keyword">lib</span>/<span class="title">node</span>/<span class="title">bar</span>.<span class="title">js</span></span></div><div class="line">/home/user/projects/node_modules/bar.js</div><div class="line">/home/user/node_modules/bar.js</div><div class="line">/home/node_modules/bar.js</div><div class="line">/node_modules/bar.js</div></pre></td></tr></table></figure>
+<h4 id="2-4-模块的缓存"><a href="#2-4-模块的缓存" class="headerlink" title="2.4 模块的缓存"></a>2.4 模块的缓存</h4><p>第一次加载某个模块时，Node会缓存该模块。以后再加载该模块，就直接从缓存取出该模块的module.exports属性。</p>
+<h4 id="2-5-require-main"><a href="#2-5-require-main" class="headerlink" title="2.5 require.main"></a>2.5 require.main</h4><p>require方法有一个main属性，可以用来判断模块是直接执行，还是被调用执行。</p>
+<p>直接执行的时候（node module.js），require.main属性指向模块本身。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>.main === <span class="built_in">module</span></div><div class="line"><span class="regexp">//</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p>调用执行的时候（通过require加载该脚本执行），上面的表达式返回false。</p>
+<hr>
+<h2 id="ES6模块规范"><a href="#ES6模块规范" class="headerlink" title="ES6模块规范"></a>ES6模块规范</h2><h4 id="以上主要阐述了CommonJS的规范，接下来将从ES6模块的规范和CommonJS规范的差异处进入，一点点剖析二者的不同。"><a href="#以上主要阐述了CommonJS的规范，接下来将从ES6模块的规范和CommonJS规范的差异处进入，一点点剖析二者的不同。" class="headerlink" title="以上主要阐述了CommonJS的规范，接下来将从ES6模块的规范和CommonJS规范的差异处进入，一点点剖析二者的不同。"></a>以上主要阐述了CommonJS的规范，接下来将从ES6模块的规范和CommonJS规范的差异处进入，一点点剖析二者的不同。</h4><h3 id="1-加载方式"><a href="#1-加载方式" class="headerlink" title="1. 加载方式"></a>1. 加载方式</h3><p><strong>ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确<br>定这些东西。</strong></p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// CommonJS模块</span></div><div class="line"><span class="keyword">let</span> &#123; stat, <span class="keyword">exists</span>, readFile &#125; = require(<span class="string">'fs'</span>);</div><div class="line"><span class="comment">// 等同于</span></div><div class="line"><span class="keyword">let</span> <span class="number">_f</span>s = require(<span class="string">'fs'</span>);</div><div class="line"><span class="keyword">let</span> stat = <span class="number">_f</span>s.stat, <span class="keyword">exists</span> = <span class="number">_f</span>s.<span class="keyword">exists</span>, readfile = <span class="number">_f</span>s.readfile;</div></pre></td></tr></table></figure>
+<p>上面代码的实质是整体加载fs模块**（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取3个方法。这种加载称为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”。</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ES6模块</span></div><div class="line"><span class="keyword">import</span> &#123; stat, <span class="built_in">exists</span>, readFile &#125; from <span class="string">'fs'</span>;</div><div class="line">上</div></pre></td></tr></table></figure>
+<p>上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS<br>模块的加载方式高。当然，这也导致了没法引用ES6模块本身，因为它不是对象。</p>
+<h3 id="2-ES6模块加载的实质"><a href="#2-ES6模块加载的实质" class="headerlink" title="2.ES6模块加载的实质"></a>2.ES6模块加载的实质</h3><p><strong>ES6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，也就是说，一旦输出一个值，模块内部的变化就影响不到这个值。，而ES6模块输出的是值的引用。</strong></p>
+<ol>
+<li>CommonJS的例子<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.js</span></div><div class="line"><span class="keyword">var</span> counter = <span class="number">3</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">incCounter</span><span class="params">()</span> <span class="comment">&#123;</span></span></div><div class="line">counter++;</div><div class="line">&#125;</div><div class="line"><span class="title">module</span>.<span class="title">exports</span> = <span class="comment">&#123;</span></div><div class="line">counter: counter,</div><div class="line">incCounter: incCounter,</div><div class="line">&#125;;</div><div class="line">上面代码输出内部变量counter和改写这个变量的内部方法incCounter。然后，在main.js里面加载这个模块。</div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="keyword">var</span> <span class="keyword">mod</span> = <span class="keyword">require</span>(<span class="string">'./lib'</span>);</div><div class="line">console.log(<span class="keyword">mod</span>.counter); <span class="comment">// 3</span></div><div class="line"><span class="keyword">mod</span>.incCounter();</div><div class="line">console.log(<span class="keyword">mod</span>.counter); <span class="comment">// 3</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>上面代码说明，lib.js模块加载以后，它的内部变化就影响不到输出的mod.counter了。这是因为mod.counter是一个原始类型的值，会被缓存。除非<br>写成一个函数，才能得到内部变动后的值。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.js</span></div><div class="line"><span class="keyword">var</span> counter = <span class="number">3</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">incCounter</span><span class="params">()</span> </span>&#123;</div><div class="line">counter++;</div><div class="line">&#125;</div><div class="line">module.exports = &#123;</div><div class="line"><span class="keyword">get</span> counter() &#123;</div><div class="line"><span class="keyword">return</span> counter</div><div class="line">&#125;,</div><div class="line">incCounter: incCounter,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">//$ node main.js</span></div><div class="line"><span class="comment">//3</span></div><div class="line"><span class="comment">//4</span></div></pre></td></tr></table></figure>
+<p>上面代码中，输出的counter属性实际上是一个取值器函数。现在再执行main.js，就可以正确读取内部变量counter的变动了。</p>
+<p><strong>ES6模块的运行机制与CommonJS不一样，它遇到模块加载命令import时，不会去执行模块，而是只生成一个动态的只读引用。等到真的需要用到<br>时，再到模块里面去取值，换句话说，ES6的输入有点像Unix系统的“符号连接”，原始值变了，import输入的值也会跟着变。因此，ES6模块是动态引<br>用，并且不会缓存值，模块里面的变量绑定其所在的模块。</strong></p>
+<ol>
+<li>ES6模块的例子</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lib.js</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">let</span> counter = <span class="number">3</span>;</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">incCounter</span>(<span class="params"></span>) </span>&#123;</div><div class="line">counter++;</div><div class="line">&#125;</div><div class="line"><span class="comment">// main.js</span></div><div class="line"><span class="keyword">import</span> &#123; counter, incCounter &#125; <span class="keyword">from</span> <span class="string">'./lib'</span>;</div><div class="line"><span class="built_in">console</span>.log(counter); <span class="comment">// 3</span></div><div class="line">incCounter();</div><div class="line"><span class="built_in">console</span>.log(counter); <span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<h3 id="2-循环加载"><a href="#2-循环加载" class="headerlink" title="2. 循环加载"></a>2. 循环加载</h3><h4 id="2-1-CommonJS模块的加载原理"><a href="#2-1-CommonJS模块的加载原理" class="headerlink" title="2.1 CommonJS模块的加载原理"></a>2.1 CommonJS模块的加载原理</h4><p>CommonJS的一个模块，就是一个脚本文件。require命令第一次加载该脚本，就会执行整个脚本，然后在内存生成一个对象。</p>
+<p>require命其实不是一个全局命令，而是指向当前模块的module.require命令，而后者又调用Node的内部命令Module._load。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Module._load = <span class="function"><span class="keyword">function</span><span class="params">(request, parent, isMain)</span> </span>&#123;</div><div class="line">  <span class="comment">// 1. 检查 Module._cache，是否缓存之中有指定模块</span></div><div class="line">  <span class="comment">// 2. 如果缓存之中没有，就创建一个新的Module实例</span></div><div class="line">  <span class="comment">// 3. 将它保存到缓存</span></div><div class="line">  <span class="comment">// 4. 使用 module.load() 加载指定的模块文件，</span></div><div class="line">  <span class="comment">//    读取文件内容之后，使用 module.compile() 执行文件代码</span></div><div class="line">  <span class="comment">// 5. 如果加载/解析过程报错，就从缓存删除该模块</span></div><div class="line">  <span class="comment">// 6. 返回该模块的 module.exports</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上面的第4步，采用module.compile()执行指定模块的脚本，逻辑如下。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Module.prototype._compile = <span class="function"><span class="keyword">function</span><span class="params">(content, filename)</span> </span>&#123;</div><div class="line">  <span class="comment">// 1. 生成一个require函数，指向module.require</span></div><div class="line">  <span class="comment">// 2. 加载其他辅助方法到require</span></div><div class="line">  <span class="comment">// 3. 将文件内容放到一个函数之中，该函数可调用 require</span></div><div class="line">  <span class="comment">// 4. 执行该函数</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>上面的第1步和第2步，require函数及其辅助方法主要如下。</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span>(): 加载外部模块</div><div class="line"><span class="keyword">require</span>.resolve()：将模块名解析到一个绝对路径</div><div class="line"><span class="keyword">require</span>.main：指向主模块</div><div class="line"><span class="keyword">require</span>.<span class="keyword">cache</span>：指向所有缓存的模块</div><div class="line"><span class="keyword">require</span>.extensions：根据文件的后缀名，调用不同的执行函数</div></pre></td></tr></table></figure>
+<h4 id="循环加载"><a href="#循环加载" class="headerlink" title="循环加载"></a>循环加载</h4><ul>
+<li>CommonJS</li>
+</ul>
+<p><strong>CommonJS模块的重要特性是加载时执行，即脚本代码在require的时候，就会全部执行。一旦出现某个模块被”循环加载”，就只输出已经执行的部<br>分，还未执行的部分不会输出。</strong></p>
+<p>让我们来看，Node官方文档里面的例子。脚本文件a.js代码如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">exports.done = <span class="literal">false</span>;</div><div class="line"><span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b.js'</span>);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'在 a.js 之中，b.done = %j'</span>, b.done);</div><div class="line">exports.done = <span class="literal">true</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'a.js 执行完毕'</span>);</div></pre></td></tr></table></figure>
+<p>上面代码之中，a.js脚本先输出一个done变量，然后加载另一个脚本文件b.js。注意，此时a.js代码就停在这里，等待b.js执行完毕，再往下执行。</p>
+<p>再看b.js的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">exports.done = <span class="literal">false</span>;</div><div class="line"><span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a.js'</span>);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'在 b.js 之中，a.done = %j'</span>, a.done);</div><div class="line">exports.done = <span class="literal">true</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'b.js 执行完毕'</span>);</div></pre></td></tr></table></figure>
+<p>上面代码之中，b.js执行到第二行，就会去加载a.js，这时，就发生了“循环加载”。系统会去a.js模块对应对象的exports属性取值，可是因为a.js还<br>没有执行完，从exports属性只能取回已经执行的部分，而不是最后的值。 </p>
+<p>a.js已经执行的部分，只有一行。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">exports.<span class="keyword">done</span> = <span class="keyword">false</span>;</div></pre></td></tr></table></figure>
+<p>然后，b.js接着往下执行，等到全部执行完毕，再把执行权交还给a.js。于是，a.js接着往下执行，直到执行完毕。我们写一个脚本main.js，验证<br>这个过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="built_in">require</span>(<span class="string">'./a.js'</span>);</div><div class="line"><span class="keyword">var</span> b = <span class="built_in">require</span>(<span class="string">'./b.js'</span>);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'在 main.js 之中, a.done=%j, b.done=%j'</span>, a.done, b.done);</div></pre></td></tr></table></figure>
+<p>执行main.js，运行结果如下。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ node main<span class="selector-class">.js</span></div><div class="line">在 <span class="selector-tag">b</span><span class="selector-class">.js</span> 之中，<span class="selector-tag">a</span><span class="selector-class">.done</span> = false</div><div class="line"><span class="selector-tag">b</span><span class="selector-class">.js</span> 执行完毕</div><div class="line">在 <span class="selector-tag">a</span><span class="selector-class">.js</span> 之中，<span class="selector-tag">b</span><span class="selector-class">.done</span> = true</div><div class="line"><span class="selector-tag">a</span><span class="selector-class">.js</span> 执行完毕</div><div class="line">在 main<span class="selector-class">.js</span> 之中, <span class="selector-tag">a</span>.done=true, <span class="selector-tag">b</span>.done=true</div></pre></td></tr></table></figure>
+<p>上面的代码证明了两件事。一是，在b.js之中，a.js没有执行完毕，只执行了第一行。二是，main.js执行到第二行时，不会再次执行b.js，而是输<br>出缓存的b.js的执行结果，即它的第四行。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">exports.<span class="keyword">done</span> = <span class="keyword">true</span>;</div></pre></td></tr></table></figure>
+<ul>
+<li>ES6</li>
+</ul>
+<p><strong>ES6模块是动态引用，如果使用import从一个模块加载变量（即import foo from ‘foo’），那些变<br>量不会被缓存，而是成为一个指向被加载模块的引用，需要开发者自己保证，真正取值的时候能够取到值。</strong></p>
+<p>请看下面这个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// a.js如下</span></div><div class="line"><span class="keyword">import</span> &#123;bar&#125; <span class="keyword">from</span> <span class="string">'./b.js'</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'a.js'</span>);</div><div class="line"><span class="built_in">console</span>.log(bar);</div><div class="line"><span class="keyword">export</span> <span class="keyword">let</span> foo = <span class="string">'foo'</span>;</div><div class="line"><span class="comment">// b.js</span></div><div class="line"><span class="keyword">import</span> &#123;foo&#125; <span class="keyword">from</span> <span class="string">'./a.js'</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'b.js'</span>);</div><div class="line"><span class="built_in">console</span>.log(foo);</div><div class="line"><span class="keyword">export</span> <span class="keyword">let</span> bar = <span class="string">'bar'</span>;</div></pre></td></tr></table></figure>
+<p>上面代码中，a.js加载b.js，b.js又加载a.js，构成循环加载。执行a.js，结果如下。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ babel-node <span class="selector-tag">a</span><span class="selector-class">.js</span></div><div class="line"><span class="selector-tag">b</span><span class="selector-class">.js</span></div><div class="line">undefined</div><div class="line"><span class="selector-tag">a</span><span class="selector-class">.js</span></div><div class="line">bar</div></pre></td></tr></table></figure>
+<p>上面代码中，由于a.js的第一行是加载b.js，所以先执行的是b.js。而b.js的第一行又是加载a.js，这时由于a.js已经开始执行了，所以不会重复执<br>行，而是继续往下执行b.js，所以第一行输出的是b.js。<br>接着，b.js要打印变量foo，这时a.js还没执行完，取不到foo的值，导致打印出来是undefined。b.js执行完，开始执行a.js，这时就一切正常了。</p>
+]]></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[解析this的四种绑定规则]]></title>
-      <url>%2F2017%2F04%2F25%2F%E8%A7%A3%E6%9E%90this%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%91%E5%AE%9A%E8%A7%84%E5%88%99%2F</url>
-      <content type="text"><![CDATA[导语： 本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。 this既不指向函数自身也不止像函数的词法作用域； this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。 this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。 this的四种绑定规则1.默认绑定function foo(){ console.log(this.a); } var a=2; foo(); // 输出2，原因：foo在全局作用域里被调用，所以this绑定的是全局作用域。 function foo(){ &quot;use strict&quot; console.log(this.a); } var a=2; foo(); // TypeError:this is undefined. 若使用严格模式，则不能将全局对象用于默认绑定，因此this会绑定到undefined。 function foo(){ console.log(this.a); } var a=2; (function(){ &quot;use strict&quot; foo(); //输出2。 })(); 在严格模式下调用foo()则不影响默认绑定。 function foo(){ console.log(this.a); } var a=2; (function(){ &quot;use strict&quot;; foo(); //输出2。 })(); 2.隐式绑定考虑：调用位置是否有上下文对象，或者是否被某个对象拥有或包含。 1–&gt;隐式绑定 function foo(){ console.log(this.a); } var obj={ a:2, foo:foo } obj.foo(); // 输出2 原因:foo()再被调用的时候，前面加上了对obj的引用，当函数引用有上下文对象时，函数中的this会绑定上去。 var obj1={ a:42; obj:obj } obj1.obj.foo(); //输出2 原因：对象属性引用链中只有上一层或者说最后一层在调用位置中起作用。 2–&gt;隐式丢失 function foo(){ console.log(this.a); } var obj={ a:2, foo:foo } var bar=obj.foo; var a=&quot;oops,global&quot;; bar(); //输出oops,global 原因：虽然bar是obj.foo的一个引用，但实际它引用的是foo函数本身，因此bar()其实是一个不带任何修饰的函数调用，因此应用了默认绑定。 3–&gt;回调函数丢失this绑定 function foo(){ console.log(this.a); } function doFoo(fn){ //fn其实引用的是foo fn(); } var obj={ a:2, foo:foo }; var a=&quot;oops,global&quot;; doFoo(obj.foo); //输出&quot;oops,global&quot; 相当于fn=obj.foo;fn(); 参数传递其实就是一种隐式赋值，因此我们传入函数时也会被隐式赋值。 作为参数传入内置函数，也会发生隐式丢失 function foo(){ console.log(this.a); } var obj={ a:2, foo:foo }; var a=&quot;oops,global&quot;; setTimeout(obj.foo,100);////输出&quot;oops,global&quot; 3.显示绑定使用call(..)和apply(..)，他们的第一个参数是一个对象，在调用函数时将其绑定到this。 1–&gt;显示绑定 function foo(){ console.log(this.a); } var obj={ a:2 } foo.call(obj); //输出2 如果你传入一个原始值(字符串类型、布尔类型)来当做this的绑定对象，这个原始值会被转换成他的对象形式。称为“装箱”。 问题：显示绑定无法解决我们之前的丢失绑定问题？但显示绑定的变种——硬绑定可以解决。 2–&gt;硬绑定 function foo(){ console.log(this.a); } var obj={ a:2 }; var bar=function(){ foo.call(obj); } bar();//输出2 setTimeout(bar,100);//输出2 //硬绑定的bar不可能再修改它的this bar.call(window);//输出2 硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值； 3–&gt;bind 由于硬绑定是一种非常常用的模式，所以ES5提供了内置的方法： Function.prototype.bind: function foo(something){ console.log(this.a,something); return this.a+something; } var obj={ a:2 }; var b=bar(3); console.log(b); 4.new绑定function foo(a){ this.a=a; } var bar=new foo(2); console.log(bar.a);//输出2 使用new来调用foo(…)时，我们会构造一个新对象并把它绑定到foo(…)调用中的this上。]]></content>
-    </entry>
+      <url>/2017/03/25/%E8%A7%A3%E6%9E%90this%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%BB%91%E5%AE%9A%E8%A7%84%E5%88%99/</url>
+      <content type="html"><![CDATA[<p>导语：</p>
+<blockquote>
+<p>本文主要归纳总结自《你不知道的JavaScript上卷》中的关于this的解析。</p>
+</blockquote>
+<ul>
+<li>this既不指向函数自身也不止像函数的词法作用域；</li>
+<li>this是在函数被调用时发生的绑定，它指向什么完全取决于函数在哪里被调用。</li>
+<li>this的绑定和函数声明的位置没有任何关系，只取决于函数的调用。</li>
+</ul>
+<a id="more"></a>
+<h3 id="this的四种绑定规则"><a href="#this的四种绑定规则" class="headerlink" title="this的四种绑定规则"></a>this的四种绑定规则</h3><h4 id="1-默认绑定"><a href="#1-默认绑定" class="headerlink" title="1.默认绑定"></a><strong>1.默认绑定</strong></h4><pre><code>function foo(){
+  console.log(this.a);
+}
+var a=2;
+foo();  // 输出2，原因：foo在全局作用域里被调用，所以this绑定的是全局作用域。
 
+function foo(){
+  &quot;use strict&quot;
+   console.log(this.a);
+}
+var a=2;
+foo();  // TypeError:this is undefined.
+</code></pre><p>若使用严格模式，则不能将全局对象用于默认绑定，因此this会绑定到undefined。</p>
+<pre><code>function foo(){
+  console.log(this.a);
+}
+var a=2;
+(function(){
+   &quot;use strict&quot;
+   foo();  //输出2。
+})();
+</code></pre><p>在严格模式下调用foo()则不影响默认绑定。</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var a=2;
+(function(){
+    &quot;use strict&quot;;
+    foo();  //输出2。
+})();
+</code></pre><h4 id="2-隐式绑定"><a href="#2-隐式绑定" class="headerlink" title="2.隐式绑定"></a><strong>2.隐式绑定</strong></h4><p>考虑：调用位置是否有上下文对象，或者是否被某个对象拥有或包含。</p>
+<p>1–&gt;隐式绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+}
+obj.foo();  // 输出2 原因:foo()再被调用的时候，前面加上了对obj的引用，当函数引用有上下文对象时，函数中的this会绑定上去。
+var obj1={
+    a:42;
+    obj:obj
+}
+obj1.obj.foo();  //输出2 原因：对象属性引用链中只有上一层或者说最后一层在调用位置中起作用。
+</code></pre><p>2–&gt;隐式丢失</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+}
+var bar=obj.foo;
+var a=&quot;oops,global&quot;;
+bar(); //输出oops,global
+原因：虽然bar是obj.foo的一个引用，但实际它引用的是foo函数本身，因此bar()其实是一个不带任何修饰的函数调用，因此应用了默认绑定。
+</code></pre><p>3–&gt;回调函数丢失this绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+function doFoo(fn){
+    //fn其实引用的是foo
+    fn();
+}
+var obj={
+    a:2,
+    foo:foo
+};
+var a=&quot;oops,global&quot;;
+doFoo(obj.foo);  //输出&quot;oops,global&quot; 相当于fn=obj.foo;fn();
+参数传递其实就是一种隐式赋值，因此我们传入函数时也会被隐式赋值。
+
+作为参数传入内置函数，也会发生隐式丢失
+function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2,
+    foo:foo
+};
+var a=&quot;oops,global&quot;;
+setTimeout(obj.foo,100);////输出&quot;oops,global&quot;
+</code></pre><h4 id="3-显示绑定"><a href="#3-显示绑定" class="headerlink" title="3.显示绑定"></a><strong>3.显示绑定</strong></h4><p>使用call(..)和apply(..)，他们的第一个参数是一个对象，在调用函数时将其绑定到this。</p>
+<p>1–&gt;显示绑定</p>
+<pre><code>function foo(){
+        console.log(this.a);
+    }
+    var obj={
+        a:2
+    }
+    foo.call(obj); //输出2
+</code></pre><p>如果你传入一个原始值(字符串类型、布尔类型)来当做this的绑定对象，这个原始值会被转换成他的对象形式。称为“装箱”。</p>
+<p>问题：显示绑定无法解决我们之前的丢失绑定问题？但显示绑定的变种——硬绑定可以解决。</p>
+<p>2–&gt;硬绑定</p>
+<pre><code>function foo(){
+    console.log(this.a);
+}
+var obj={
+    a:2
+};
+var bar=function(){
+    foo.call(obj);
+}
+bar();//输出2
+setTimeout(bar,100);//输出2
+//硬绑定的bar不可能再修改它的this
+bar.call(window);//输出2
+</code></pre><p>硬绑定的典型应用场景就是创建一个包裹函数，负责接收参数并返回值；</p>
+<p>3–&gt;bind</p>
+<p>由于硬绑定是一种非常常用的模式，所以ES5提供了内置的方法：</p>
+<pre><code>Function.prototype.bind:
+function foo(something){
+    console.log(this.a,something);
+    return this.a+something;
+}
+var obj={
+    a:2
+};
+var b=bar(3);
+console.log(b);
+</code></pre><h4 id="4-new绑定"><a href="#4-new绑定" class="headerlink" title="4.new绑定"></a><strong>4.new绑定</strong></h4><pre><code>function foo(a){
+    this.a=a;
+}
+var bar=new foo(2);
+console.log(bar.a);//输出2
+</code></pre><p>使用new来调用foo(…)时，我们会构造一个新对象并把它绑定到foo(…)调用中的this上。</p>
+]]></content>
+      
+        
+    </entry>
     
     <entry>
-      <title><![CDATA[node.js深入浅出]]></title>
-      <url>%2F2017%2F04%2F25%2Fnode-js%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%2F</url>
-      <content type="text"><![CDATA[导语： 从本篇文章开始，将对《node.js深入浅出》这本书进行学习，并总结出每一章的知识点概要，如果有时间也会整理出一份详细的思维导图出来，有兴趣的朋友可以一起学习讨论。]]></content>
+      <title><![CDATA[Array.forEach用法总结]]></title>
+      <url>/2017/02/22/Array-forEach%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93/</url>
+      <content type="html"><![CDATA[<p>Javascript数组Array的forEach扩展方法 forEach是最常用到的数组扩展方法之一，相当于参数化循环数组，它简单的在数组的每一个元素上应用传入的函数，这也意味着只有存在的元素会被访问和处理。</p>
+<a id="more"></a>
+<p>如果我们用console.log替换处理函数，将可以得到另外的有趣结果： [1,2,3,”csser”].forEach(console.log);</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">输出结果：  </div><div class="line"></div><div class="line">　　<span class="number">1</span>, <span class="number">0</span>, Array[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">"csser"</span>]</div><div class="line"></div><div class="line">　　<span class="number">2</span>, <span class="number">1</span>, Array[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">"csser"</span>]</div><div class="line"></div><div class="line">　　<span class="number">3</span>, <span class="number">2</span>, Array[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">"csser"</span>]</div><div class="line"></div><div class="line">　　csser, <span class="number">3</span>, Array[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">"csser"</span>]</div></pre></td></tr></table></figure>
+<p>这里forEach函数每次调用console.log时会传入3个参数。显而易见，这3个参数分别是：当前项、当前项索引和数组本身,</p>
+<p>forEach是一个基本的数组高阶（higher-order）方法，</p>
+<p>其语法定义为： array.forEach(callback[, thisObject]) 第一个参数我们已经知道了，它是一个拥有3个参数的函数，该函数将应用于数组的每一项。</p>
+<p>而第二个参数表示上下文对象（context object）或者this值，用于指向回调函数的this引用。</p>
+<p>这有时会挺有用，比如当我们想使用某个对象的方法作为forEach的处理函数时：　</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">　　<span class="keyword">var</span> database = &#123;</div><div class="line">　　　　users: [<span class="string">"CSSer"</span>, <span class="string">"John"</span>, <span class="string">"David"</span>],</div><div class="line">　　　　sendEmail: <span class="function"><span class="keyword">function</span> <span class="params">(user)</span> </span>&#123;</div><div class="line">　　　　　　<span class="keyword">if</span> (<span class="keyword">this</span>.isValidUser(user)) &#123;</div><div class="line">　　　　　　　　 <span class="comment">/* 发送消息 */</span></div><div class="line">　　　　　　&#125;</div><div class="line">　　　　&#125;,</div><div class="line">　　　　isValidUser: <span class="function"><span class="keyword">function</span> <span class="params">(user)</span> </span>&#123;</div><div class="line">　　　　　　 <span class="comment">/* 验证代码 */</span> &#125;</div><div class="line">　　　　&#125;; </div><div class="line"></div><div class="line">database.users.forEach(database.sendEmail,database);</div></pre></td></tr></table></figure>
+<p>简单分析下，在sendMail函数内部的this指向database对象，并且this.isValidUser指向必须的函数，如果我们不传入第二个参数，this值会被默认指向全局对象（在浏览器中是window）或者在strict模式下指向undefined。</p>
+]]></content>
+      
+        
     </entry>
-
-    
-    <entry>
-      <title><![CDATA[我的博客]]></title>
-      <url>%2F2017%2F04%2F23%2Fhello%2F</url>
-      <content type="text"></content>
-    </entry>
-
     
   
   
