@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jasonhj.github.io/"/>
-  <updated>2017-05-29T10:14:04.182Z</updated>
+  <updated>2017-05-30T15:39:27.971Z</updated>
   <id>https://jasonhj.github.io/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>宽松相等和严格相等</title>
+    <link href="https://jasonhj.github.io/2017/05/18/%E5%AE%BD%E6%9D%BE%E7%9B%B8%E7%AD%89%E5%92%8C%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89/"/>
+    <id>https://jasonhj.github.io/2017/05/18/宽松相等和严格相等/</id>
+    <published>2017-05-18T15:23:37.000Z</published>
+    <updated>2017-05-30T15:39:27.971Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>常见的误区是</strong>：“== 检查值是否相等，=== 检查值和类型是否相等”</p>
+<p><strong>正确的解释是</strong>：“== 允许在相等比较中进行强制类型转换，而=== 不允许。”<br><a id="more"></a></p>
+<h2 id="抽象相等比较算法"><a href="#抽象相等比较算法" class="headerlink" title="抽象相等比较算法"></a>抽象相等比较算法</h2><p><em>ES5规范11.9.3节对抽象相等比较算法定义如下：</em>  <a href="https://people-mozilla.org/~jorendorff/es5.1-final.html" target="_blank" rel="external">ES5规范</a></p>
+<p>以 x 和 y 为值进行 x == y 比较会产生的结果可为 true 或 false。比较的执行步骤如下：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> 若 <span class="keyword">Type</span>(x) 与 <span class="keyword">Type</span>(y) 相同， 则</div><div class="line">    <span class="number">1.</span> 若 <span class="keyword">Type</span>(x) 为 Undefined， 返回 <span class="literal">true</span>。</div><div class="line">    <span class="number">2.</span> 若 <span class="keyword">Type</span>(x)为 <span class="built_in">Null</span>， 返回 <span class="literal">true</span>。</div><div class="line">    <span class="number">3.</span> 若 <span class="keyword">Type</span>(x)为 Number，则</div><div class="line">        <span class="number">1.</span> 若 x 为 <span class="number">NaN</span>，返回 <span class="literal">false</span>。</div><div class="line">        <span class="number">2.</span> 若 y 为 <span class="number">NaN</span>，返回 <span class="literal">false</span>。</div><div class="line">        <span class="number">3.</span> 若 x 与 y 为相等数值，返回 <span class="literal">true</span>。</div><div class="line">        <span class="number">4.</span> 若 x 为 +<span class="number">0</span> 且 y 为 −<span class="number">0</span>，返回 <span class="literal">true</span>。</div><div class="line">        <span class="number">5.</span> 若 x 为 −<span class="number">0</span> 且 y 为 +<span class="number">0</span>，返回 <span class="literal">true</span>。</div><div class="line">        <span class="number">6.</span> 返回 <span class="literal">false</span>。</div><div class="line">    <span class="number">4.</span> 若 <span class="keyword">Type</span>(x) 为 <span class="built_in">String</span>，则当 x 和 y 为完全相同的字符序列（长度相等且相同字符在相同位置）时返回 <span class="literal">true</span>。否则，返回 <span class="literal">false</span>。</div><div class="line">    <span class="number">5.</span> 若 <span class="keyword">Type</span>(x) 为 <span class="built_in">Boolean</span>，当 x 和 y 为同为 <span class="literal">true</span> 或者同为 <span class="literal">false</span> 时返回 <span class="literal">true</span>。否则，返回 <span class="literal">false</span>。</div><div class="line">    当 x 和 y 为引用同一对象时返回 <span class="literal">true</span>。否则，返回 <span class="literal">false</span>。</div><div class="line"><span class="number">2.</span> 若 x 为 <span class="built_in">null</span> 且 y 为 undefined，返回 <span class="literal">true</span>。</div><div class="line"><span class="number">3.</span> 若 x 为 undefined 且 y 为 <span class="built_in">null</span>，返回 <span class="literal">true</span>。</div><div class="line"><span class="number">4.</span> 若 <span class="keyword">Type</span>(x) 为 Number 且 <span class="keyword">Type</span>(y) 为 <span class="built_in">String</span>，返回 x == ToNumber(y) 的结果。</div><div class="line"><span class="number">5.</span> 若 <span class="keyword">Type</span>(x) 为 <span class="built_in">String</span> 且 <span class="keyword">Type</span>(y) 为 Number，返回比较 ToNumber(x) == y 的结果。</div><div class="line"><span class="number">6.</span> 若 <span class="keyword">Type</span>(x) 为 <span class="built_in">Boolean</span>，返回比较 ToNumber(x) == y 的结果。</div><div class="line"><span class="number">7.</span> 若 <span class="keyword">Type</span>(y) 为 <span class="built_in">Boolean</span>，返回比较 x == ToNumber(y) 的结果。</div><div class="line"><span class="number">8.</span> 若 <span class="keyword">Type</span>(x) 为 <span class="built_in">String</span> 或 Number，且 <span class="keyword">Type</span>(y) 为 Object，返回比较 x == ToPrimitive(y) 的结果。</div><div class="line"><span class="number">9.</span> 若 <span class="keyword">Type</span>(x) 为 Object 且 <span class="keyword">Type</span>(y) 为 <span class="built_in">String</span> 或 Number，返回比较 ToPrimitive(x) == y 的结果。</div><div class="line"><span class="number">10.</span> 返回 <span class="literal">false</span>。 </div><div class="line"></div><div class="line">注：根据上述等于的定义：</div><div class="line">- 字符串比较可以以：<span class="string">""</span> + a == <span class="string">""</span> + b 硬性触发。</div><div class="line">- 数值比较可以以：+a == +b 硬性触发。</div><div class="line">- 布尔比较可以以：!a == !b 硬性触发。</div><div class="line"></div><div class="line">注：等于运算符有以下的不变量：</div><div class="line">- A != B 与 !(A == B) 相等。</div><div class="line">- 除了 A 与 B 的执行顺序以外，A == B 与 B == A 相等。</div><div class="line"></div><div class="line">注：等于运算符不总是可传递。举例来说，两个代表相同 <span class="built_in">String</span> 值但是不同的 <span class="built_in">String</span> 对象会分别与 <span class="built_in">String</span> 值 ==，但是两个对象间不相等。</div></pre></td></tr></table></figure>
+<ol>
+<li>字符串和数字之间的相等：调用ToNumber(),将字符串转换为数字类型</li>
+<li><p>其他类型和布尔类型之间的相等：调用ToNumber(),将布尔类型转换为数字类型</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">var a = <span class="string">"42"</span>;</div><div class="line">强制类型转换 ｜ <span class="number">81</span></div><div class="line"><span class="comment">// 不要这样用，条件判断不成立：</span></div><div class="line"><span class="keyword">if</span> <span class="comment">(a == true)</span> &#123;</div><div class="line"><span class="comment">// ..</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 也不要这样用，条件判断不成立：</span></div><div class="line"><span class="keyword">if</span> <span class="comment">(a === true)</span> &#123;</div><div class="line"><span class="comment">// ..</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 这样的显式用法没问题：</span></div><div class="line"><span class="keyword">if</span> <span class="comment">(a)</span> &#123;</div><div class="line"><span class="comment">// ..</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 这样的显式用法更好：</span></div><div class="line"><span class="keyword">if</span> <span class="comment">(!!a)</span> &#123;</div><div class="line"><span class="comment">// ..</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 这样的显式用法也很好：</span></div><div class="line"><span class="keyword">if</span> <span class="comment">(Boolean( a )</span>) &#123;</div><div class="line"><span class="comment">// ..</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>null 和undefined 之间的相等：null==undefined 返回true</p>
+</li>
+<li>对象和非对象之间的相等：调用ToPrimitive()方法，将对象转为标量基本类型。 </li>
+</ol>
+<p><strong>为了将值转换为相应的基本类型值，抽象操作ToPrimitive会首先检查该值是否有valueOf() 方法。<br>如果有并且返回基本类型值，就使用该值进行强制类型转换。如果没有就使用toString()的返回值（如果存在）来进行强制类型转换。如果valueOf() 和toString() 均不返回基本类型值，会产生TypeError 错误。</strong></p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>valueOf()返回值</th>
+<th>toString()返回值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数组Array</td>
+<td>返回数组实例</td>
+<td>将Array的元素转为字符串，用逗号分隔</td>
+</tr>
+<tr>
+<td>布尔值Boolean</td>
+<td>布尔值</td>
+<td>转换为”true”或”false”</td>
+</tr>
+<tr>
+<td>日期Date</td>
+<td>从1970年到目前的时间（毫秒）</td>
+<td>返回日期的文本表示形式。</td>
+</tr>
+<tr>
+<td>函数Function</td>
+<td>函数本身</td>
+<td>返回如下格式字符串:function Name(){[native code]}</td>
+</tr>
+<tr>
+<td>数字Number</td>
+<td>数字值</td>
+<td>返回数字文本形式</td>
+</tr>
+<tr>
+<td>对象Object</td>
+<td>对象本身，默认值</td>
+<td>返回”[object objectname]”,objectname为对象类型的名称</td>
+</tr>
+<tr>
+<td>字符串String</td>
+<td>字符串值</td>
+<td>返回String对象的值</td>
+</tr>
+</tbody>
+</table>
+<h2 id="严格等于比较算法"><a href="#严格等于比较算法" class="headerlink" title="严格等于比较算法"></a>严格等于比较算法</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="string">比较</span> <span class="string">x</span> <span class="string">===</span> <span class="string">y，x</span> <span class="string">和</span> <span class="string">y</span> <span class="string">为值，需要产出</span> <span class="literal">true</span> <span class="string">或</span> <span class="literal">false</span><span class="string">。比较过程如下：</span></div><div class="line"></div><div class="line"><span class="number">1.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">与</span> <span class="string">Type(y)</span> <span class="string">的结果不一致，返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line"><span class="number">2.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">结果为</span> <span class="string">Undefined，返回</span> <span class="literal">true</span><span class="string">。</span></div><div class="line"><span class="number">3.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">结果为</span> <span class="literal">Null</span><span class="string">，返回</span> <span class="literal">true</span><span class="string">。</span></div><div class="line"><span class="number">4.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">结果为</span> <span class="string">Number，则</span></div><div class="line">    <span class="string">a.</span> <span class="string">如果</span> <span class="string">x</span> <span class="string">为</span> <span class="string">NaN，返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line">    <span class="string">b.</span> <span class="string">如果</span> <span class="string">y</span> <span class="string">为</span> <span class="string">NaN，返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line">    <span class="string">c.</span> <span class="string">如果</span> <span class="string">x</span> <span class="string">与</span> <span class="string">y</span> <span class="string">为同一个数字，返回</span> <span class="literal">true</span><span class="string">。</span></div><div class="line">    <span class="string">d.</span> <span class="string">如果</span> <span class="string">x</span> <span class="string">为</span> <span class="string">+0，y</span> <span class="string">为</span> <span class="bullet">-0</span><span class="string">，返回</span> <span class="literal">true</span><span class="string">。</span></div><div class="line">    <span class="string">e.</span> <span class="string">如果</span> <span class="string">x</span> <span class="string">为</span> <span class="bullet">-0</span><span class="string">，y</span> <span class="string">为</span> <span class="string">+0，返回</span> <span class="literal">true</span><span class="string">。</span></div><div class="line">    <span class="string">f.</span> <span class="string">返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line"><span class="number">5.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">结果为</span> <span class="string">String，如果</span> <span class="string">x</span> <span class="string">与</span> <span class="string">y</span> <span class="string">为完全相同的字符序列（相同的长度和相同的字符对应相同的位置），返回</span> <span class="literal">true</span><span class="string">，否则，返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line"><span class="number">6.</span> <span class="string">如果</span> <span class="string">Type(x)</span> <span class="string">结果为</span> <span class="string">Boolean，如果</span> <span class="string">x</span> <span class="string">与</span> <span class="string">y</span> <span class="string">都为</span> <span class="literal">true</span> <span class="string">或</span> <span class="literal">false</span><span class="string">，则返回</span> <span class="literal">true</span><span class="string">，否则，返回</span> <span class="literal">false</span><span class="string">。</span></div><div class="line"><span class="number">7.</span> <span class="string">如果</span> <span class="string">x</span> <span class="string">和</span> <span class="string">y</span> <span class="string">引用到同一个</span> <span class="string">Object</span> <span class="string">对象，返回</span> <span class="literal">true</span><span class="string">，否则，返回</span> <span class="literal">false</span><span class="string">。</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;常见的误区是&lt;/strong&gt;：“== 检查值是否相等，=== 检查值和类型是否相等”&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;正确的解释是&lt;/strong&gt;：“== 允许在相等比较中进行强制类型转换，而=== 不允许。”&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>CommonJS与ES6模块规范</title>
